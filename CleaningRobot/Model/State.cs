@@ -2,5 +2,6 @@
 
 public sealed record State(Map Map, Robot Robot, Commands Commands)
 {
-    public Position[] Visited { get; } = Array.Empty<Position>();
+    public List<Position> Visited { get; } = new();
+    public List<Position> Cleaned { get; } = new();
 }

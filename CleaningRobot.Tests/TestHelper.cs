@@ -25,6 +25,6 @@ public static class TestHelper
                 new Tile[] { Tile.DirtyFloor, Tile.DirtyFloor, Tile.DirtyFloor, Tile.DirtyFloor },
                 new Tile[] { Tile.DirtyFloor, Tile.Wall, Tile.DirtyFloor, Tile.DirtyFloor }
             }),
-        new(new(3, 0), new North(), new(80)),
+        new(new(3, 0), Orientation.North, new(80)),
         new(new Command[] { Command.TurnLeft, Command.Advance, Command.Clean, Command.Advance, Command.Clean, Command.TurnRight, Command.Advance, Command.Clean }));
 }
