@@ -1,6 +1,6 @@
 namespace CleaningRobot.Tests;
 
-public sealed class SerializationTests
+public sealed class SerializerTests
 {
     [Fact]
     public void SerializeInput_ShouldGetCorrectInput()
@@ -31,7 +31,7 @@ public sealed class SerializationTests
             new[] { "TL", "A", "C", "A", "C", "TR", "A", "C" },
             80);
 
-        var actual = InputSerializer.Load(input);
+        var actual = Serializer.Deserialize(input);
 
         actual.map.Should().BeEquivalentTo(expected.map);
         actual.start.Should().Be(expected.start);
