@@ -1,3 +1,3 @@
 namespace CleaningRobot.Model;
 
-public record Battery(int StateOfCharge);
+public sealed record Battery(int StateOfCharge);

@@ -1,8 +1,9 @@
 namespace CleaningRobot.Model;
 
-public sealed record Commands(Command[] Queue)
+public sealed record Commands
 {
-    private Queue<Command> _commands = new();
+    public Queue<Command> Queue { get; }
+    public Commands(IEnumerable<Command> queue) => Queue = new(queue);
 }
 
 public abstract record Command

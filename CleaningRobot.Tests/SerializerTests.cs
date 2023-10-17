@@ -3,7 +3,7 @@ namespace CleaningRobot.Tests;
 public sealed class SerializerTests
 {
     [Fact]
-    public void SerializeInput_ShouldGetCorrectInput()
+    public void SerializeInput_ShouldReturnExpectedResult()
     {
         const string input = """
                              {

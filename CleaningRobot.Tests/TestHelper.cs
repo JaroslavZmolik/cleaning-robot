@@ -1,4 +1,6 @@
-﻿namespace CleaningRobot.Tests;
+﻿using CleaningRobot.Model;
+
+namespace CleaningRobot.Tests;
 
 public static class TestHelper
 {
@@ -13,4 +15,16 @@ public static class TestHelper
         new(3, 0, "N"),
         new[] { "TL", "A", "C", "A", "C", "TR", "A", "C" },
         80);
+
+    public static readonly State State1 = new(
+        new(
+            new[]
+            {
+                new Tile[] { Tile.DirtyFloor, Tile.DirtyFloor, Tile.DirtyFloor, Tile.DirtyFloor },
+                new Tile[] { Tile.DirtyFloor, Tile.DirtyFloor, Tile.Column, Tile.DirtyFloor },
+                new Tile[] { Tile.DirtyFloor, Tile.DirtyFloor, Tile.DirtyFloor, Tile.DirtyFloor },
+                new Tile[] { Tile.DirtyFloor, Tile.Wall, Tile.DirtyFloor, Tile.DirtyFloor }
+            }),
+        new(new(3, 0), new North(), new(80)),
+        new(new Command[] { Command.TurnLeft, Command.Advance, Command.Clean, Command.Advance, Command.Clean, Command.TurnRight, Command.Advance, Command.Clean }));
 }
