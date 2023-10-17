@@ -18,21 +18,9 @@ public sealed class SerializerTests
                                "battery": 80
                              }
                              """;
-
-        var expected = new Input(
-            new[]
-            {
-                new[] { "S", "S", "S", "S" },
-                new[] { "S", "S", "C", "S" },
-                new[] { "S", "S", "S", "S" },
-                new[] { "S", "null", "S", "S" }
-            },
-            new(3, 0, "N"),
-            new[] { "TL", "A", "C", "A", "C", "TR", "A", "C" },
-            80);
-
         var actual = Serializer.Deserialize(input);
 
+        var expected = TestHelper.Input1;
         actual.map.Should().BeEquivalentTo(expected.map);
         actual.start.Should().Be(expected.start);
         actual.commands.Should().BeEquivalentTo(expected.commands);

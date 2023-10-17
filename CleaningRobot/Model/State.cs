@@ -1,3 +1,3 @@
 ﻿namespace CleaningRobot.Model;
 
-public record State(Map Map, Robot Robot, Commands Commands);
+public sealed record State(Map Map, Robot Robot, Commands Commands);

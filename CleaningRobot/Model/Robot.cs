@@ -1,3 +1,3 @@
 namespace CleaningRobot.Model;
 
-public record Robot(Position Position, Orientation Orientation, Battery Battery);
+public sealed record Robot(Position Position, Orientation Orientation, Battery Battery);
