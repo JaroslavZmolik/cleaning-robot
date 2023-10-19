@@ -4,9 +4,10 @@ public sealed record Commands
 {
     public Queue<Command> Queue { get; }
     public Commands(IEnumerable<Command> queue) => Queue = new(queue);
+    public int Count => Queue.Count;
 }
 
-public abstract record Command
+public abstract record Command(int BatteryConsumption)
 {
     public static TurnLeft TurnLeft { get; } = new();
     public static TurnRight TurnRight { get; } = new();
@@ -15,12 +16,16 @@ public abstract record Command
     public static Clean Clean { get; } = new();
 }
 
-public sealed record TurnLeft : Command;
+public abstract record TurnCommand(int BatteryConsumption) : Command(BatteryConsumption);
 
-public sealed record TurnRight : Command;
+public abstract record MoveCommand(int BatteryConsumption) : Command(BatteryConsumption);
 
-public sealed record Advance : Command;
+public sealed record TurnLeft() : TurnCommand(1);
 
-public sealed record Back : Command;
+public sealed record TurnRight() : TurnCommand(1);
 
-public sealed record Clean : Command;
+public sealed record Advance() : MoveCommand(2);
+
+public sealed record Back() : MoveCommand(3);
+
+public sealed record Clean() : Command(5);

@@ -4,8 +4,14 @@ namespace CleaningRobot;
 
 public static class Runner
 {
-    public static State RunCleaningProgram(State state)
+    public static State Start(State state)
     {
-        throw new NotImplementedException();
+        var currentState = state;
+        while (currentState.CanExecuteNextCommand())
+        {
+            currentState = currentState.ExecuteNextCommand();
+        }
+
+        return currentState;
     }
 }

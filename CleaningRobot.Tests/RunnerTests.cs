@@ -2,7 +2,7 @@
 
 namespace CleaningRobot.Tests;
 
-public class RunnerTests
+public sealed class RunnerTests
 {
     [Fact]
     public void RunCleaningProgram_ShouldReturnExpectedFinalState()
@@ -18,9 +18,14 @@ public class RunnerTests
                 }),
             new(new(2, 0), Orientation.North, new(53)),
             new(Array.Empty<Command>()));
-        expectedState.Visited.AddRange(new[] { new Position(1, 0), new Position(2, 0), new Position(3, 0) });
-        expectedState.Cleaned.AddRange(new[] { new Position(1, 0), new Position(2, 0) });
+        expectedState.Visited.Add(new(1, 0));
+        expectedState.Visited.Add(new(2, 0));
+        expectedState.Visited.Add(new(3, 0));
+        expectedState.Cleaned.Add(new(1, 0));
+        expectedState.Cleaned.Add(new(2, 0));
 
-        var actualState = Runner.RunCleaningProgram(TestHelper.State1);
+        var actualState = Runner.Start(TestHelper.State1);
+
+        actualState.Map.Tiles.Should().BeEquivalentTo(expectedState.Map.Tiles);
     }
 }
