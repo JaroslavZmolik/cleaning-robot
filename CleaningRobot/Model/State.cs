@@ -13,12 +13,14 @@ public sealed record State
     public Map Map { get; init; }
     public Robot Robot { init; get; }
     public Commands Commands { get; init; }
+    public BackOffStrategy? BackOffStrategy { get; set; }
     public HashSet<Position> Visited { get; } = new();
     public HashSet<Position> Cleaned { get; } = new();
 
     public bool CanExecuteNextCommand() =>
-        Commands.Count != 0 &&
-        Commands.Queue.Peek().BatteryConsumption <= Robot.Battery.StateOfCharge;
+        !Robot.IsStuck
+        && Commands.Count != 0
+        && Commands.Queue.Peek().BatteryConsumption <= Robot.Battery.StateOfCharge;
 
     public State ExecuteNextCommand()
     {
@@ -34,8 +36,15 @@ public sealed record State
         return newState with { Robot = newState.Robot with { Battery = battery } };
     }
 
-    public State InitiateBackingSequence()
-    {
-        throw new NotImplementedException();
-    }
+    public State InitiateBackOffSequence() =>
+        BackOffStrategy switch
+        {
+            null => this with { BackOffStrategy = BackOffStrategy.First },
+            BackOffStrategyFirst => this with { BackOffStrategy = BackOffStrategy.Second },
+            BackOffStrategySecond => this with { BackOffStrategy = BackOffStrategy.Third },
+            BackOffStrategyThird => this with { BackOffStrategy = BackOffStrategy.Fourth },
+            BackOffStrategyFourth => this with { BackOffStrategy = BackOffStrategy.Fifth },
+            BackOffStrategyFifth => this with { Robot = Robot with { IsStuck = true } },
+            _ => throw new ArgumentOutOfRangeException()
+        };
 }

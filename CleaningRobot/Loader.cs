@@ -30,7 +30,7 @@ public static class Loader
         };
 
     private static Robot LoadRobot(Start start, int battery) =>
-        new(new(start.X, start.Y), LoadRobotOrientation(start.facing), new(battery));
+        new(new(start.X, start.Y), LoadRobotOrientation(start.facing), new(battery), false);
 
     private static Orientation LoadRobotOrientation(string startFacing) =>
         startFacing switch

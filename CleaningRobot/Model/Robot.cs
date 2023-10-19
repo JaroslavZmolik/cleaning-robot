@@ -1,6 +1,6 @@
 namespace CleaningRobot.Model;
 
-public sealed record Robot(Position Position, Orientation Orientation, Battery Battery)
+public sealed record Robot(Position Position, Orientation Orientation, Battery Battery, bool IsStuck)
 {
     public static State Turn(State state, TurnCommand turn) =>
         state with { Robot = state.Robot with { Orientation = state.Robot.Orientation.Turn(turn) } };
@@ -19,7 +19,7 @@ public sealed record Robot(Position Position, Orientation Orientation, Battery B
         return moveResult switch
         {
             SuccessfulMove successfulMove => successfulMove.NewState,
-            InvalidMove => state.InitiateBackingSequence(),
+            InvalidMove => state.InitiateBackOffSequence(),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

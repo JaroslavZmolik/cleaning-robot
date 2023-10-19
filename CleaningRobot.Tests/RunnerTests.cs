@@ -16,7 +16,7 @@ public sealed class RunnerTests
                     new Tile[] { Tile.DirtyFloor, Tile.DirtyFloor, Tile.DirtyFloor, Tile.DirtyFloor },
                     new Tile[] { Tile.DirtyFloor, Tile.Wall, Tile.DirtyFloor, Tile.DirtyFloor }
                 }),
-            new(new(2, 0), Orientation.North, new(53)),
+            new(new(2, 0), Orientation.North, new(53), false),
             new(Array.Empty<Command>()));
         expectedState.Visited.Add(new(1, 0));
         expectedState.Visited.Add(new(2, 0));
