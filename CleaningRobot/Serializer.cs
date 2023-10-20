@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace CleaningRobot;
+﻿namespace CleaningRobot;
 
 public static class Serializer
 {

@@ -19,7 +19,7 @@ public sealed record Robot(Position Position, Orientation Orientation, Battery B
         return moveResult switch
         {
             SuccessfulMove successfulMove => successfulMove.NewState,
-            InvalidMove => state.InitiateBackOffSequence(),
+            InvalidMove => State.InitiateBackOffSequence(state),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

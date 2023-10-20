@@ -1,6 +1,4 @@
-﻿using CleaningRobot.Model;
-
-namespace CleaningRobot;
+﻿namespace CleaningRobot;
 
 public static class Loader
 {

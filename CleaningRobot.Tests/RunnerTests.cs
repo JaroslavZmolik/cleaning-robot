@@ -27,5 +27,9 @@ public sealed class RunnerTests
         var actualState = Runner.Start(TestHelper.State1);
 
         actualState.Map.Tiles.Should().BeEquivalentTo(expectedState.Map.Tiles);
+        actualState.BackOffStrategy.Should().BeNull();
+        actualState.Cleaned.Should().BeEquivalentTo(expectedState.Cleaned);
+        actualState.Visited.Should().BeEquivalentTo(expectedState.Visited);
+        actualState.Robot.Should().Be(expectedState.Robot);
     }
 }

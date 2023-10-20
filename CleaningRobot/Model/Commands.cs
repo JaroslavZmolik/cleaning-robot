@@ -2,7 +2,7 @@ namespace CleaningRobot.Model;
 
 public sealed record Commands
 {
-    public Queue<Command> Queue { get; }
+    public Queue<Command> Queue { get; init; }
     public Commands(IEnumerable<Command> queue) => Queue = new(queue);
     public int Count => Queue.Count;
 }

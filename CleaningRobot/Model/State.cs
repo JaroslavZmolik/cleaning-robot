@@ -20,31 +20,59 @@ public sealed record State
     public bool CanExecuteNextCommand() =>
         !Robot.IsStuck
         && Commands.Count != 0
-        && Commands.Queue.Peek().BatteryConsumption <= Robot.Battery.StateOfCharge;
+        && HasEnoughBatteryToExecuteCommand(Commands.Queue.Peek(), Robot.Battery);
 
     public State ExecuteNextCommand()
     {
-        var currentCommand = Commands.Queue.Dequeue();
+        return ExecuteCommand(this, Commands.Queue.Dequeue());
+    }
+
+    public static State InitiateBackOffSequence(State state) =>
+        state.BackOffStrategy switch
+        {
+            null => state with { BackOffStrategy = BackOffStrategy.First },
+            BackOffStrategyFirst => state with { BackOffStrategy = BackOffStrategy.Second },
+            BackOffStrategySecond => state with { BackOffStrategy = BackOffStrategy.Third },
+            BackOffStrategyThird => state with { BackOffStrategy = BackOffStrategy.Fourth },
+            BackOffStrategyFourth => state with { BackOffStrategy = BackOffStrategy.Fifth },
+            BackOffStrategyFifth => state with { Robot = state.Robot with { IsStuck = true } },
+            _ => throw new ArgumentOutOfRangeException(nameof(state.BackOffStrategy), state.BackOffStrategy, "")
+        };
+
+    public static State ExecuteBackOffStrategy(State state)
+    {
+        if (state.BackOffStrategy is null)
+        {
+            return state;
+        }
+
+        if (state.BackOffStrategy.Commands.Queue.Count == 0)
+        {
+            return state with { BackOffStrategy = null };
+        }
+
+        var currentState = state;
+        var currentCommand = currentState.BackOffStrategy.Commands.Queue.Dequeue();
+        currentState = ExecuteCommand(currentState, currentCommand);
+        
+        return currentState;
+    }
+
+    private static State ExecuteCommand(State state, Command currentCommand)
+    {
         var newState = currentCommand switch
         {
-            TurnCommand turn => Robot.Turn(this, turn),
-            MoveCommand move => Robot.Move(this, move),
-            Clean => Map.Clean(this, Robot.Position),
+            TurnCommand turn => Robot.Turn(state, turn),
+            MoveCommand move => Robot.Move(state, move),
+            Clean => Map.Clean(state, state.Robot.Position),
             _ => throw new ArgumentOutOfRangeException(nameof(currentCommand))
         };
-        var battery = new Battery(Robot.Battery.StateOfCharge - currentCommand.BatteryConsumption);
+        var battery = new Battery(state.Robot.Battery.StateOfCharge - currentCommand.BatteryConsumption);
         return newState with { Robot = newState.Robot with { Battery = battery } };
     }
 
-    public State InitiateBackOffSequence() =>
-        BackOffStrategy switch
-        {
-            null => this with { BackOffStrategy = BackOffStrategy.First },
-            BackOffStrategyFirst => this with { BackOffStrategy = BackOffStrategy.Second },
-            BackOffStrategySecond => this with { BackOffStrategy = BackOffStrategy.Third },
-            BackOffStrategyThird => this with { BackOffStrategy = BackOffStrategy.Fourth },
-            BackOffStrategyFourth => this with { BackOffStrategy = BackOffStrategy.Fifth },
-            BackOffStrategyFifth => this with { Robot = Robot with { IsStuck = true } },
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    private static bool HasEnoughBatteryToExecuteCommand(Command command, Battery battery)
+    {
+        return command.BatteryConsumption <= battery.StateOfCharge;
+    }
 }
