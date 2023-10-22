@@ -19,12 +19,14 @@ public sealed record State
 
     public bool CanExecuteNextCommand() =>
         !Robot.IsStuck
-        && Commands.Count != 0
-        && HasEnoughBatteryToExecuteCommand(Commands.Queue.Peek(), Robot.Battery);
+        && !Commands.IsEmpty
+        && HasEnoughBatteryToExecuteCommand(Commands.Peek(), Robot.Battery);
 
     public State ExecuteNextCommand()
     {
-        return ExecuteCommand(this, Commands.Queue.Dequeue());
+        var (command, newCommands) = Commands.Dequeue();
+        var newState = ExecuteCommand(this, command) with { Commands = newCommands };
+        return newState;
     }
 
     public static State InitiateBackOffSequence(State state) =>
@@ -46,14 +48,14 @@ public sealed record State
             return state;
         }
 
-        if (state.BackOffStrategy.Commands.Queue.Count == 0)
+        if (state.BackOffStrategy.Commands.IsEmpty)
         {
             return state with { BackOffStrategy = null };
         }
 
         var currentState = state;
-        var currentCommand = currentState.BackOffStrategy.Commands.Queue.Dequeue();
-        currentState = ExecuteCommand(currentState, currentCommand);
+        var (command, newCommands) = currentState.BackOffStrategy.Commands.Dequeue();
+        currentState = ExecuteCommand(currentState, command) with { BackOffStrategy = currentState.BackOffStrategy with { Commands = newCommands } };
 
         return currentState;
     }

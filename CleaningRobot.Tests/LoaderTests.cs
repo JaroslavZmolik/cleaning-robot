@@ -13,7 +13,7 @@ public sealed class LoaderTests
 
         actual.Map.Tiles.Should().BeEquivalentTo(expected.Map.Tiles);
         actual.Robot.Should().Be(expected.Robot);
-        actual.Commands.Queue.Should().BeEquivalentTo(expected.Commands.Queue);
+        actual.Commands.Should().BeEquivalentTo(expected.Commands);
     }
 
     [Fact]

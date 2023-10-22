@@ -2,9 +2,18 @@ namespace CleaningRobot.Model;
 
 public sealed record Commands
 {
-    public Queue<Command> Queue { get; init; }
-    public Commands(IEnumerable<Command> queue) => Queue = new(queue);
-    public int Count => Queue.Count;
+    private readonly ImmutableQueue<Command> _queue;
+
+    public Commands(IEnumerable<Command> commands)
+    {
+        _queue = ImmutableQueue.Create(commands.ToArray());
+    }
+
+    public bool IsEmpty => _queue.IsEmpty;
+
+    public Command Peek() => _queue.Peek();
+
+    public (Command item, Commands newCommands) Dequeue() => (_queue.Peek(), new(_queue.Dequeue()));
 }
 
 public abstract record Command(int BatteryConsumption)
