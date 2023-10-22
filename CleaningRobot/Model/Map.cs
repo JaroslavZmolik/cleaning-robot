@@ -14,13 +14,13 @@ public sealed record Map(Tile[][] Tiles)
         return state;
     }
 
-    public int RowsCount => Tiles[0].Length;
-    public int ColumnsCount => Tiles.Length;
+    public int RowsCount => Tiles.Length;
+    public int ColumnsCount => Tiles[0].Length;
 
     public Tile this[Position position]
     {
-        get => Tiles[position.Column][position.Row];
-        private set => Tiles[position.Column][position.Row] = value;
+        get => Tiles[position.Row][position.Column];
+        private set => Tiles[position.Row][position.Column] = value;
     }
 }
 
