@@ -2,6 +2,11 @@
 
 public static class Loader
 {
+    private const string NorthAbbreviation = "N";
+    private const string EastAbbreviation = "E";
+    private const string SouthAbbreviation = "S";
+    private const string WestAbbreviation = "W";
+
     public static State LoadState(Input input)
     {
         var map = LoadMap(input.map);
@@ -9,6 +14,15 @@ public static class Loader
         var commands = LoadCommands(input.commands);
 
         return new(map, robot, commands);
+    }
+
+    public static Output SaveState(State state)
+    {
+        var visited = SavePositions(state.Visited);
+        var cleaned = SavePositions(state.Cleaned);
+        var robotPosition = SaveRobot(state.Robot);
+
+        return new(visited, cleaned, robotPosition, state.Robot.Battery.StateOfCharge);
     }
 
     private static Map LoadMap(IEnumerable<string[]> map) =>
@@ -27,16 +41,16 @@ public static class Loader
             _ => throw new ArgumentOutOfRangeException(nameof(tile), tile, null)
         };
 
-    private static Robot LoadRobot(Start start, int battery) =>
+    private static Robot LoadRobot(RobotPosition start, int battery) =>
         new(new(start.X, start.Y), LoadRobotOrientation(start.facing), new(battery), false);
 
     private static Orientation LoadRobotOrientation(string startFacing) =>
         startFacing switch
         {
-            "N" => Orientation.North,
-            "E" => Orientation.East,
-            "S" => Orientation.South,
-            "W" => Orientation.West,
+            NorthAbbreviation => Orientation.North,
+            EastAbbreviation => Orientation.East,
+            SouthAbbreviation => Orientation.South,
+            WestAbbreviation => Orientation.West,
             _ => throw new ArgumentOutOfRangeException(nameof(startFacing), startFacing, null)
         };
 
@@ -52,5 +66,21 @@ public static class Loader
             "TL" => Command.TurnLeft,
             "B" => Command.Back,
             _ => throw new ArgumentOutOfRangeException(nameof(command), command, null)
+        };
+
+    private static Coordinates[] SavePositions(HashSet<Position> positions) =>
+        positions.Select(cleaned => new Coordinates(cleaned.Column, cleaned.Row)).ToArray();
+
+    private static RobotPosition SaveRobot(Robot robot) =>
+        new(robot.Position.Column, robot.Position.Row, SaveRobotOrientation(robot.Orientation));
+
+    private static string SaveRobotOrientation(Orientation orientation) =>
+        orientation switch
+        {
+            North => NorthAbbreviation,
+            East => EastAbbreviation,
+            South => SouthAbbreviation,
+            West => WestAbbreviation,
+            _ => throw new ArgumentOutOfRangeException(nameof(orientation), orientation, null)
         };
 }

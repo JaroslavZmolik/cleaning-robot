@@ -1,6 +1,4 @@
-﻿using CleaningRobot.Model;
-
-namespace CleaningRobot.Tests;
+﻿namespace CleaningRobot.Tests;
 
 public static class TestHelper
 {

@@ -54,7 +54,7 @@ public sealed record State
         var currentState = state;
         var currentCommand = currentState.BackOffStrategy.Commands.Queue.Dequeue();
         currentState = ExecuteCommand(currentState, currentCommand);
-        
+
         return currentState;
     }
 
