@@ -69,7 +69,11 @@ public static class Loader
         };
 
     private static Coordinates[] SavePositions(HashSet<Position> positions) =>
-        positions.Select(cleaned => new Coordinates(cleaned.Column, cleaned.Row)).ToArray();
+        positions
+            .OrderBy(position => position.Column)
+            .ThenBy(position => position.Row)
+            .Select(position => new Coordinates(position.Column, position.Row))
+            .ToArray();
 
     private static RobotPosition SaveRobot(Robot robot) =>
         new(robot.Position.Column, robot.Position.Row, SaveRobotOrientation(robot.Orientation));

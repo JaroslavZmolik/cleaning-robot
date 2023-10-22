@@ -27,4 +27,19 @@
     <ProjectReference Include="..\CleaningRobot\CleaningRobot.csproj"/>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\TestData\test1.json">
+      <Link>TestData\test1.json</Link>
+    </Content>
+    <Content Include="..\TestData\test1_result.json">
+      <Link>TestData\test1_result.json</Link>
+    </Content>
+    <Content Include="..\TestData\test2.json">
+      <Link>TestData\test2.json</Link>
+    </Content>
+    <Content Include="..\TestData\test2_result.json">
+      <Link>TestData\test2_result.json</Link>
+    </Content>
+  </ItemGroup>
+
 </Project>
