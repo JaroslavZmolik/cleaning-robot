@@ -73,8 +73,6 @@ public sealed record State
         return newState with { Robot = newState.Robot with { Battery = battery } };
     }
 
-    private static bool HasEnoughBatteryToExecuteCommand(Command command, Battery battery)
-    {
-        return command.BatteryConsumption <= battery.StateOfCharge;
-    }
+    private static bool HasEnoughBatteryToExecuteCommand(Command command, Battery battery) =>
+        command.BatteryConsumption <= battery.StateOfCharge;
 }
