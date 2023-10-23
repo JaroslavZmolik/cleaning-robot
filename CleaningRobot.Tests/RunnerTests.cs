@@ -71,7 +71,7 @@ public sealed class RunnerTests
                     new Tile[] { Tile.DirtyFloor, Tile.DirtyFloor }
                 }),
             new(new(0, 0), Orientation.East, new(27), false),
-            new(new Command[] { Command.Clean, Command.Advance, Command.Clean, Command.TurnRight, Command.Advance, Command.Clean, Command.TurnRight, Command.Advance, Command.Clean  }));
+            new(new Command[] { Command.Clean, Command.Advance, Command.Clean, Command.TurnRight, Command.Advance, Command.Clean, Command.TurnRight, Command.Advance, Command.Clean }));
 
         var expectedState = new State(
             new(
