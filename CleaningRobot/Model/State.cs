@@ -55,9 +55,11 @@ public sealed record State
 
         var currentState = state;
         var (command, newCommands) = currentState.BackOffStrategy.Commands.Dequeue();
-        currentState = ExecuteCommand(currentState, command) with { BackOffStrategy = currentState.BackOffStrategy with { Commands = newCommands } };
+        currentState = ExecuteCommand(currentState, command);
 
-        return currentState;
+        return state.BackOffStrategy == currentState.BackOffStrategy
+            ? currentState with { BackOffStrategy = currentState.BackOffStrategy with { Commands = newCommands } }
+            : currentState;
     }
 
     private static State ExecuteCommand(State state, Command currentCommand) => currentCommand.Execute(state);

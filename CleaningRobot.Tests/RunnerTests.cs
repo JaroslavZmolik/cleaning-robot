@@ -30,4 +30,33 @@ public sealed class RunnerTests
         actualState.Visited.Should().BeEquivalentTo(expectedState.Visited);
         actualState.Robot.Should().Be(expectedState.Robot);
     }
+
+    [Fact]
+    public void RunCleaningProgram_OneTileWithMoveCommand_ShouldFinishAllBackOffStrategiesAndEndUpStuck()
+    {
+        var inputState = new State(
+            new(
+                new[]
+                {
+                    new Tile[] { Tile.DirtyFloor }
+                }),
+            new(new(0, 0), Orientation.North, new(100), false),
+            new(new Command[] { Command.Advance, Command.Clean }));
+        
+        var expectedState = new State(
+            new(
+                new[]
+                {
+                    new Tile[] { Tile.DirtyFloor }
+                }),
+            new(new(0, 0), Orientation.South, new(81), true),
+            new(Array.Empty<Command>()));
+
+        var actualState = Runner.Start(inputState);
+        
+        actualState.Map.Tiles.Should().BeEquivalentTo(expectedState.Map.Tiles);
+        actualState.Cleaned.Should().BeEquivalentTo(expectedState.Cleaned);
+        actualState.Visited.Should().BeEquivalentTo(expectedState.Visited);
+        actualState.Robot.Should().Be(expectedState.Robot);
+    }
 }
