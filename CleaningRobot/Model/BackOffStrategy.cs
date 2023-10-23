@@ -9,11 +9,7 @@ public abstract record BackOffStrategy(Commands Commands)
     public static BackOffStrategyFifth Fifth { get; } = new();
 }
 
-public sealed record BackOffStrategyFirst() : BackOffStrategy(new Commands(new Command[] { Command.TurnRight, Command.Advance, Command.TurnLeft }))
-{
-    public bool Equals(BackOffStrategyFirst? other) => other is not null;
-    public override int GetHashCode() => 1;
-}
+public sealed record BackOffStrategyFirst() : BackOffStrategy(new Commands(new Command[] { Command.TurnRight, Command.Advance, Command.TurnLeft }));
 
 public sealed record BackOffStrategySecond() : BackOffStrategy(new Commands(new Command[] { Command.TurnRight, Command.Advance, Command.TurnRight }));
 

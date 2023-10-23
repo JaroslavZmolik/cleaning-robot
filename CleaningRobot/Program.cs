@@ -3,6 +3,7 @@
     Console.WriteLine("Usage: <source.json> <result.json>");
     return;
 }
+
 var inputPath = args[0];
 
 if (!File.Exists(inputPath))
