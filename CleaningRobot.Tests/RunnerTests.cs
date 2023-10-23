@@ -42,7 +42,7 @@ public sealed class RunnerTests
                 }),
             new(new(0, 0), Orientation.North, new(100), false),
             new(new Command[] { Command.Advance, Command.Clean }));
-        
+
         var expectedState = new State(
             new(
                 new[]
@@ -53,7 +53,45 @@ public sealed class RunnerTests
             new(Array.Empty<Command>()));
 
         var actualState = Runner.Start(inputState);
-        
+
+        actualState.Map.Tiles.Should().BeEquivalentTo(expectedState.Map.Tiles);
+        actualState.Cleaned.Should().BeEquivalentTo(expectedState.Cleaned);
+        actualState.Visited.Should().BeEquivalentTo(expectedState.Visited);
+        actualState.Robot.Should().Be(expectedState.Robot);
+    }
+
+    [Fact]
+    public void RunCleaningProgram_RobotRunOutOfBattery_ShouldFinishWithoutCompletingTheWholeSequence()
+    {
+        var inputState = new State(
+            new(
+                new[]
+                {
+                    new Tile[] { Tile.DirtyFloor, Tile.DirtyFloor },
+                    new Tile[] { Tile.DirtyFloor, Tile.DirtyFloor }
+                }),
+            new(new(0, 0), Orientation.East, new(27), false),
+            new(new Command[] { Command.Clean, Command.Advance, Command.Clean, Command.TurnRight, Command.Advance, Command.Clean, Command.TurnRight, Command.Advance, Command.Clean  }));
+
+        var expectedState = new State(
+            new(
+                new[]
+                {
+                    new Tile[] { Tile.CleanFloor, Tile.CleanFloor },
+                    new Tile[] { Tile.CleanFloor, Tile.CleanFloor }
+                }),
+            new(new(0, 1), Orientation.West, new(4), false),
+            new(Array.Empty<Command>()));
+        expectedState.Visited.Add(new(0, 0));
+        expectedState.Visited.Add(new(0, 1));
+        expectedState.Visited.Add(new(1, 0));
+        expectedState.Visited.Add(new(1, 1));
+        expectedState.Cleaned.Add(new(0, 0));
+        expectedState.Cleaned.Add(new(1, 0));
+        expectedState.Cleaned.Add(new(1, 1));
+
+        var actualState = Runner.Start(inputState);
+
         actualState.Map.Tiles.Should().BeEquivalentTo(expectedState.Map.Tiles);
         actualState.Cleaned.Should().BeEquivalentTo(expectedState.Cleaned);
         actualState.Visited.Should().BeEquivalentTo(expectedState.Visited);

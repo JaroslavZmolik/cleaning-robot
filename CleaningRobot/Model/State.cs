@@ -20,7 +20,12 @@ public sealed record State
     public bool CanExecuteNextCommand() =>
         !Robot.IsStuck
         && !Commands.IsEmpty
-        && HasEnoughBatteryToExecuteCommand(Commands.Peek(), Robot.Battery);
+        && HasEnoughBatteryToExecuteCommand(GetNextCommand(), Robot.Battery);
+
+    private Command GetNextCommand() =>
+        BackOffStrategy is not null && !BackOffStrategy.Commands.IsEmpty
+            ? BackOffStrategy.Commands.Peek()
+            : Commands.Peek();
 
     public State ExecuteNextCommand()
     {
