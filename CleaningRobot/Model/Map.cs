@@ -2,25 +2,13 @@ namespace CleaningRobot.Model;
 
 public sealed record Map(Tile[][] Tiles)
 {
-    public static State Clean(State state, Position robotPosition)
-    {
-        if (state.Map[robotPosition] is not DirtyFloor)
-        {
-            return state;
-        }
-
-        state.Cleaned.Add(robotPosition);
-        state.Map[robotPosition] = Tile.CleanFloor;
-        return state;
-    }
-
     public int RowsCount => Tiles.Length;
     public int ColumnsCount => Tiles[0].Length;
 
     public Tile this[Position position]
     {
         get => Tiles[position.Row][position.Column];
-        private set => Tiles[position.Row][position.Column] = value;
+        set => Tiles[position.Row][position.Column] = value;
     }
 }
 

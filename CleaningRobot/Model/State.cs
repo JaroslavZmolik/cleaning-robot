@@ -60,18 +60,7 @@ public sealed record State
         return currentState;
     }
 
-    private static State ExecuteCommand(State state, Command currentCommand)
-    {
-        var newState = currentCommand switch
-        {
-            TurnCommand turn => Robot.Turn(state, turn),
-            MoveCommand move => Robot.Move(state, move),
-            Clean => Map.Clean(state, state.Robot.Position),
-            _ => throw new ArgumentOutOfRangeException(nameof(currentCommand))
-        };
-        var battery = new Battery(state.Robot.Battery.StateOfCharge - currentCommand.BatteryConsumption);
-        return newState with { Robot = newState.Robot with { Battery = battery } };
-    }
+    private static State ExecuteCommand(State state, Command currentCommand) => currentCommand.Execute(state);
 
     private static bool HasEnoughBatteryToExecuteCommand(Command command, Battery battery) =>
         command.BatteryConsumption <= battery.StateOfCharge;
